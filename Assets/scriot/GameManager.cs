@@ -84,6 +84,9 @@ public class GameManager : MonoBehaviour
     private bool isGetIceCream = false;
     public Sprite ice;
     public bool isLookedReizou = false;
+    public bool isGetRimokon=false;
+    public Button rimokonButton;
+    public Sprite rimokon;
     #endregion
 
 
@@ -91,7 +94,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         nowWall = WALLFLONT;
-        List<string> columns = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+        List<string> columns = new List<string>() { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10","11","12","13"};
         columns.ForEach(x => messageMaster.Columns.Add(x));
         SetAllMessages();
     }
@@ -170,6 +173,19 @@ public class GameManager : MonoBehaviour
 
         List<string> reizou = new List<string>() { "む、よく見ると、奥の方に何か見える", "水色の羽…あそこにちるのがいる？", "どうにか出てきてもらえないかな"};
         AddOneMessage("冷蔵室", reizou);
+
+        List<string> osezi = new List<string>() { "きめ「えっ、そ、そうですか？」","うん、キャラクターの魅せ方が上手いというか…","きめ「ふ、ふふ、当然ですとも！」","きめ「私こそ、文庫劇団の二枚目ですから！」","そんなきめぇ丸のサイン、欲しいなあ"
+            　　　　　　　　　　　　　　　　　　　,"出てきてくれないかな…","きめ「そういうことなら…」","きめ「って、その手には乗りませんよ！」","きめ「おだてたって、ここからは出てあげません！」","失敗か…うーん","あ、でもちょっと、嬉しそうな顔してる"};
+        AddOneMessage("お世辞", osezi);
+
+        List<string> madaGoal = new List<string>() { "これはさいきょーのドア","4人のゆっくりを集めた者は","この扉を開けることができる！","なるほど、ゆっくりを4人探せばいいのか" };
+        AddOneMessage("閉じたゴール", madaGoal);
+
+        List<string> goal = new List<string>() { "ガチャッ！", "鍵の音が鳴った…", "僕はそっと、さいきょーのドアを開いた","その先には…" };
+        AddOneMessage("開いたゴール", goal);
+
+        List<string> rimokon = new List<string>() { "これって、何かのリモコン？", "…あ、よく見ると、照明用って書いてある","部屋の照明のリモコンなのか。どの部屋のだろう？" };
+        AddOneMessage("リモコン", rimokon);
     }
 
     private void AddOneMessage(string messageName, List<string> messages)
@@ -182,7 +198,7 @@ public class GameManager : MonoBehaviour
         {
             dr[i] = message;
             i++;
-            if (i == 11)
+            if (i == 15)
             {
                 break;
             }
@@ -287,7 +303,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case "きめぇ不正解":
-
+                ShowOrCloseMessage("あ、あの、きめぇ丸ってさ、いつも良い演技だよね", "お世辞");
                 break;
 
             case "冷凍室":
@@ -384,6 +400,10 @@ public class GameManager : MonoBehaviour
                     spotLite.gameObject.SetActive(false);
                     break;
 
+                case "あ、でもちょっと、嬉しそうな顔してる":
+                    kimeTere.gameObject.SetActive(false);
+                    break;    
+
                 case "きめぇ「あ……。」":
                     source.PlayOneShot(switchOff);
                     kimePC.gameObject.SetActive(false);
@@ -410,10 +430,30 @@ public class GameManager : MonoBehaviour
         {
             B_Message.gameObject.SetActive(true);
             showingMessageName = showingMessage;
-        }
+            }
         int yukkuriNokoriCount = 4 - yukkuriCount;
         B_Message.GetComponentInChildren<Text>().text =Regex.Replace(message,"%s",yukkuriNokoriCount.ToString());
         messagePageCounter++;
+        string nowMessage2 = B_Message.GetComponentInChildren<Text>().text;
+        switch (nowMessage2)
+        {
+            case "きめ「えっ、そ、そうですか？」":
+                kimeBikkuri.gameObject.SetActive(true);
+                break;
+
+            case "きめ「ふ、ふふ、当然ですとも！」":
+                kimeBikkuri.gameObject.SetActive(false);
+                break;
+
+            case "きめ「って、その手には乗りませんよ！」":
+                kimeOko.gameObject.SetActive(true);
+                break;
+
+            case "失敗か…うーん":
+                kimeOko.gameObject.SetActive(false);
+                kimeTere.gameObject.SetActive(true);
+                break;
+        }
     }
     #endregion
 
@@ -508,39 +548,46 @@ public class GameManager : MonoBehaviour
 
     public void ClickPC()
     {
-        if (!isGetKime)
+        if (messagePageCounter == 0 && !selectPanel.activeSelf)
         {
-            source.PlayOneShot(Crick);
-            ShowOrCloseMessage("ノートパソコンだ", "なし");
-            Invoke("OnKimePC", 1);
-        }
-        else 
-        {
-            ShowOrCloseMessage("一体どうやって、ここに入ってたんだ？", "なし");
+            if (!isGetKime)
+            {
+                source.PlayOneShot(Crick);
+                ShowOrCloseMessage("ノートパソコンだ", "なし");
+                Invoke("OnKimePC", 1);
+            }
+            else
+            {
+                ShowOrCloseMessage("一体どうやって、ここに入ってたんだ？", "なし");
+            }
         }
     }
 
     private void OnKimePC()
     {
-        B_Message.gameObject.SetActive(false);
-        PC.gameObject.SetActive(false);
-        kimePC.gameObject.SetActive(true);
-        source.PlayOneShot(turnOn);
-        ShowOrCloseMessage("うわ！", "きめぇ");
+
+            B_Message.gameObject.SetActive(false);
+            PC.gameObject.SetActive(false);
+            kimePC.gameObject.SetActive(true);
+            source.PlayOneShot(turnOn);
+            ShowOrCloseMessage("うわ！", "きめぇ");
     }
 
     public void ClickKimePC()
     {
-        if (isGetIceCream)
+        if (messagePageCounter == 0 && !selectPanel.activeSelf)
         {
-            source.PlayOneShot(Crick);
-            ShowOrCloseMessage("どうやってPCから出てきてもらおう？", "なし");
-            Invoke("ShowKimeSelect", 1);
-        }
-        else 
-        {
-            source.PlayOneShot(Crick);
-            ShowOrCloseMessage("きめ「ふう、ふう、この中結構、暑いんですよね」", "なし");
+            if (isGetIceCream)
+            {
+                source.PlayOneShot(Crick);
+                ShowOrCloseMessage("どうやってPCから出てきてもらおう？", "なし");
+                Invoke("ShowKimeSelect", 1);
+            }
+            else
+            {
+                source.PlayOneShot(Crick);
+                ShowOrCloseMessage("きめ「なんだか少し、お腹が減りましたね」", "なし");
+            }
         }
     }
 
@@ -557,12 +604,15 @@ public class GameManager : MonoBehaviour
 
     public void ClickRadio() 
     {
-        bigImage.sprite = radioPicture;
-        bigImage.gameObject.SetActive(true);
-        source.PlayOneShot(Crick);
-        ShowOrCloseMessage("これって、ラジカセ？何が入ってるんだろ", "なし");
-        radio.gameObject.SetActive(false);
-        Invoke("PlayRadioSound", 1);
+        if (messagePageCounter == 0 && !selectPanel.activeSelf)
+        {
+            bigImage.sprite = radioPicture;
+            bigImage.gameObject.SetActive(true);
+            source.PlayOneShot(Crick);
+            ShowOrCloseMessage("これって、ラジカセ？何が入ってるんだろ", "なし");
+            radio.gameObject.SetActive(false);
+            Invoke("PlayRadioSound", 1);
+        }
     }
 
     private void PlayRadioSound() 
@@ -587,15 +637,34 @@ public class GameManager : MonoBehaviour
     {
         if (messagePageCounter == 0 && !selectPanel.activeSelf)
         {
-            source.PlayOneShot(Crick);
-            ShowOrCloseMessage("これって、電気のスイッチかな。押してみよう", "なし");
-            StartCoroutine(DelayMethod(1.5f, () =>
+            if (isGetRimokon)
             {
-                source.PlayOneShot(switchSE);
-                spotLite.gameObject.SetActive(true);
-                Invoke("DenkyuOn", 1);
-                return;
-            }));
+                source.PlayOneShot(Crick);
+                ShowOrCloseMessage("これって、電気のスイッチかな。どうしようか？", "なし");
+                StartCoroutine(DelayMethod(1.0f, () =>
+                {
+                    selectionFirst.gameObject.SetActive(true);
+                    selectionFirst.GetComponentInChildren<Text>().text = "壁のスイッチを押してみる";
+                    selectionSecond.gameObject.SetActive(true);
+                    selectionSecond.GetComponentInChildren<Text>().text = "リモコンのスイッチを押してみる";
+                    selectPanel.SetActive(true);
+                    selectFirstTriger = "壁スイッチ";
+                    selectSecondTriger = "リモコン";
+                }));
+
+            }
+            else
+            {
+                source.PlayOneShot(Crick);
+                ShowOrCloseMessage("これって、電気のスイッチかな。押してみよう", "なし");
+                StartCoroutine(DelayMethod(1.5f, () =>
+                {
+                    source.PlayOneShot(switchSE);
+                    spotLite.gameObject.SetActive(true);
+                    Invoke("DenkyuOn", 1);
+                    return;
+                }));
+            }
         }
     }
 
@@ -657,7 +726,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void PushLastDoor()
+    {
+        if (messagePageCounter == 0 && !selectPanel.activeSelf)
+        {
+            source.PlayOneShot(Crick);
+            if (yukkuriCount < 4)
+            {
+                ShowOrCloseMessage("このドア、貼り紙がしてあるな", "閉じたゴール");
+                return;
+            }
 
+            ShowOrCloseMessage("よし、ゆっくりを4人集めたぞ", "開いたゴール");
+        }
+    }
+
+    public void GetRimokon() 
+    {
+        bigImage.sprite = rimokon;
+        bigImage.gameObject.SetActive(true);
+        source.PlayOneShot(Crick);
+        ShowOrCloseMessage("ん、何か落ちてる", "リモコン");
+        isGetRimokon = true;
+        rimokonButton.gameObject.SetActive(false);
+    }
 
     #endregion
 }
