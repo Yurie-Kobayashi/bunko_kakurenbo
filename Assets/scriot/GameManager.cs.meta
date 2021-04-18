@@ -3,7 +3,32 @@ guid: dd277278946a2454fa9833b1b8d243a2
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - PanelWalls: {instanceID: 0}
+  - B_Message: {instanceID: 0}
+  - bigImage: {instanceID: 0}
+  - selectPanel: {instanceID: 0}
+  - selectionFirst: {instanceID: 0}
+  - selectionSecond: {instanceID: 0}
+  - Crick: {instanceID: 0}
+  - select: {instanceID: 0}
+  - finish: {instanceID: 0}
+  - tiruno: {fileID: 21300000, guid: 50d9c8bef0f116f4fbd156f9ee2338f6, type: 3}
+  - mail: {fileID: 21300000, guid: 441b500d38cbd7f4d9644260b70b677b, type: 3}
+  - source: {instanceID: 0}
+  - hihhi: {instanceID: 0}
+  - ohoihoi: {instanceID: 0}
+  - zurakare: {instanceID: 0}
+  - PC: {instanceID: 0}
+  - kimePC: {instanceID: 0}
+  - kimeBikkuri: {instanceID: 0}
+  - kimeKyoton: {instanceID: 0}
+  - kimeTere: {instanceID: 0}
+  - kimeOko: {instanceID: 0}
+  - turnOn: {instanceID: 0}
+  - claping: {instanceID: 0}
+  - radio: {instanceID: 0}
+  - radioPicture: {fileID: 21300000, guid: 7b6f2b9b7de69aa40a72140ac8ecef68, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
